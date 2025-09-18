@@ -1,0 +1,151 @@
+:root {
+    --primary-color: #2a5298;
+    --secondary-color: #1e3c72;
+    --text-color: #333;
+    --light-text: #666;
+    --background-color: #f5f7fa;
+    --card-background: #ffffff;
+    --skill-background: #eef2ff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.card {
+    background: var(--card-background);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.card-header {
+    text-align: center;
+    padding: 30px 20px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: white;
+}
+
+.profile-img {
+    font-size: 80px;
+    color: white;
+    margin-bottom: 15px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.title {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.card-body {
+    padding: 30px 20px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.value {
+    display: block;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.label {
+    font-size: 14px;
+    color: var(--light-text);
+}
+
+.skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.skill {
+    background: var(--skill-background);
+    color: var(--primary-color);
+    padding: 8px 15px;
+    border-radius: 15px;
+    font-size: 14px;
+    transition: transform 0.2s;
+}
+
+.skill:hover {
+    transform: translateY(-2px);
+}
+
+.card-footer {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    border-top: 1px solid #eee;
+}
+
+.social-link {
+    color: var(--light-text);
+    font-size: 24px;
+    transition: color 0.2s;
+}
+
+.social-link:hover {
+    color: var(--primary-color);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        border-radius: 15px;
+    }
+    
+    .profile-img {
+        font-size: 60px;
+    }
+    
+    h1 {
+        font-size: 20px;
+    }
+    
+    .value {
+        font-size: 20px;
+    }
+}
