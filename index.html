@@ -3,48 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Developer Profile Card</title>
+    <title>Physics Playground</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="card">
-        <div class="card-header">
-            <div class="profile-img">
-                <!-- Placeholder avatar using Font Awesome -->
-                <i class="fas fa-user-circle"></i>
+    <div class="container">
+        <canvas id="physicsCanvas"></canvas>
+        <div class="controls">
+            <div class="control-group">
+                <h3>Particle Controls</h3>
+                <button id="addParticle">Add Particle</button>
+                <button id="clearParticles">Clear All</button>
             </div>
-            <h1>John Developer</h1>
-            <p class="title">Full Stack Developer</p>
-        </div>
-        <div class="card-body">
-            <div class="stats">
-                <div class="stat">
-                    <span class="value">5+</span>
-                    <span class="label">Years Exp.</span>
+            <div class="control-group">
+                <h3>Physics Settings</h3>
+                <div class="slider-control">
+                    <label for="gravity">Gravity:</label>
+                    <input type="range" id="gravity" min="0" max="2" step="0.1" value="1">
+                    <span class="value-display" id="gravityValue">1.0</span>
                 </div>
-                <div class="stat">
-                    <span class="value">50+</span>
-                    <span class="label">Projects</span>
-                </div>
-                <div class="stat">
-                    <span class="value">100+</span>
-                    <span class="label">Clients</span>
+                <div class="slider-control">
+                    <label for="bounce">Bounce:</label>
+                    <input type="range" id="bounce" min="0" max="1" step="0.1" value="0.7">
+                    <span class="value-display" id="bounceValue">0.7</span>
                 </div>
             </div>
-            <div class="skills">
-                <span class="skill">JavaScript</span>
-                <span class="skill">React</span>
-                <span class="skill">Node.js</span>
-                <span class="skill">Azure</span>
-                <span class="skill">Python</span>
+            <div class="info-panel">
+                <h3>Particles: <span id="particleCount">0</span></h3>
+                <p>Click on canvas to add particles at cursor position</p>
             </div>
-        </div>
-        <div class="card-footer">
-            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
         </div>
     </div>
+    <script src="physics.js"></script>
+    <script src="ui.js"></script>
 </body>
 </html>
