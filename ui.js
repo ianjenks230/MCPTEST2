@@ -1,6 +1,25 @@
 // Initialize simulation
 const simulation = new PhysicsSimulation('simulationCanvas');
 
+// Panel collapse state
+let isControlsCollapsed = false;
+
+// UI Controls for panel collapse
+const toggleControlsBtn = document.getElementById('toggle-controls');
+const minimizeBtn = document.getElementById('minimize');
+const controls = document.querySelector('.controls');
+
+if (toggleControlsBtn && minimizeBtn && controls) {
+    const togglePanel = () => {
+        isControlsCollapsed = !isControlsCollapsed;
+        controls.classList.toggle('collapsed', isControlsCollapsed);
+        toggleControlsBtn.style.transform = isControlsCollapsed ? 'rotate(180deg)' : '';
+    };
+
+    toggleControlsBtn.addEventListener('click', togglePanel);
+    minimizeBtn.addEventListener('click', togglePanel);
+}
+
 // UI Controls
 document.getElementById('spawnBody').addEventListener('click', () => {
     const centerX = window.innerWidth / 2;

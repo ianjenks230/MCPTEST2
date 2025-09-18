@@ -38,19 +38,72 @@ body {
     position: fixed;
     top: 20px;
     right: 20px;
-    width: 300px;
+    width: 360px;
     z-index: 2;
-    max-height: calc(100vh - 40px);
-    overflow-y: auto;
+}
+
+.toggle-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 48px !important;
+    height: 48px;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    transition: transform 0.3s ease;
+}
+
+.toggle-btn .icon {
+    font-size: 1.5em;
+    margin: 0;
 }
 
 .controls {
     background: var(--ui-bg);
     border-radius: 15px;
-    padding: 20px;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform-origin: top right;
+}
+
+.controls.collapsed {
+    transform: scale(0.98);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.control-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 0 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.control-header h2 {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.minimize-btn {
+    width: 32px !important;
+    height: 32px;
+    padding: 0 !important;
+    border-radius: 8px !important;
+}
+
+.controls-content {
+    padding: 20px;
+    max-height: calc(90vh - 80px);
+    overflow-y: auto;
 }
 
 .control-group {
@@ -277,17 +330,23 @@ select {
         width: calc(100% - 40px);
         bottom: 20px;
         top: auto;
+        max-height: 60vh;
     }
 
     .controls {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        overflow-y: auto;
+        max-height: calc(60vh - 40px);
+        padding-right: 10px;
     }
 
     .control-group {
         margin: 0;
         padding: 0;
         border: none;
+        flex-shrink: 0;
+        width: 100%;
     }
 }

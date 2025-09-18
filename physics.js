@@ -144,6 +144,53 @@ class PhysicsSimulation {
     updatePhysics() {
         if (this.paused) return;
 
+        // First pass: Update velocities based on collisions
+        for (let i = 0; i < this.bodies.length; i++) {
+            for (let j = i + 1; j < this.bodies.length; j++) {
+                const body1 = this.bodies[i];
+                const body2 = this.bodies[j];
+
+                // Calculate distance between particles
+                const dx = body2.x - body1.x;
+                const dy = body2.y - body1.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                // Check for collision
+                if (distance < body1.radius + body2.radius) {
+                    // Calculate collision normal
+                    const nx = dx / distance;
+                    const ny = dy / distance;
+
+                    // Calculate relative velocity
+                    const relativeVelocityX = body2.vx - body1.vx;
+                    const relativeVelocityY = body2.vy - body1.vy;
+                    const relativeSpeed = relativeVelocityX * nx + relativeVelocityY * ny;
+
+                    // Don't resolve if particles are moving apart
+                    if (relativeSpeed > 0) continue;
+
+                    // Calculate impulse
+                    const restitution = this.bounce;
+                    const impulse = -(1 + restitution) * relativeSpeed;
+                    const totalMass = body1.mass + body2.mass;
+
+                    // Apply impulse
+                    body1.vx -= (impulse * nx * body2.mass) / totalMass;
+                    body1.vy -= (impulse * ny * body2.mass) / totalMass;
+                    body2.vx += (impulse * nx * body1.mass) / totalMass;
+                    body2.vy += (impulse * ny * body1.mass) / totalMass;
+
+                    // Separate particles to prevent sticking
+                    const overlap = (body1.radius + body2.radius - distance) * 0.5;
+                    body1.x -= overlap * nx;
+                    body1.y -= overlap * ny;
+                    body2.x += overlap * nx;
+                    body2.y += overlap * ny;
+                }
+            }
+        }
+
+        // Second pass: Update positions and apply other forces
         this.bodies.forEach(body => {
             // Apply gravity
             body.vy += this.gravity;

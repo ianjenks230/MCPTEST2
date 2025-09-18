@@ -10,60 +10,65 @@
     <canvas id="simulationCanvas"></canvas>
     
     <div class="ui-container">
+        <button id="toggle-controls" class="toggle-btn">
+            <span class="icon">⚙️</span>
+        </button>
         <div class="controls">
-            <div class="control-group">
-                <h3>Particle Controls</h3>
-                <button id="spawnBody" class="btn">
-                    <span class="icon">➕</span> Add Particle
-                </button>
-                <button id="resetBtn" class="btn">
-                    <span class="icon">🔄</span> Clear All
-                </button>
-                <button id="pauseBtn" class="btn">
-                    <span class="icon">⏸</span> Pause
+            <div class="control-header">
+                <h2>Particle Playground</h2>
+                <button class="minimize-btn" id="minimize">
+                    <span class="icon">-</span>
                 </button>
             </div>
+            <div class="controls-content">
+                <div class="control-group">
+                    <h3>Particle Controls</h3>
+                    <button id="spawnBody" class="btn">
+                        <span class="icon">➕</span> Add Particle
+                    </button>
+                    <button id="resetBtn" class="btn">
+                        <span class="icon">🔄</span> Clear All
+                    </button>
+                    <button id="pauseBtn" class="btn">
+                        <span class="icon">⏸</span> Pause
+                    </button>
+                </div>
 
-            <div class="control-group">
-                <h3>Physics Settings</h3>
-                <div class="slider-group">
-                    <div class="slider-control">
-                        <label for="massSlider">Mass:</label>
-                        <input type="range" id="massSlider" min="1" max="100" value="10">
-                        <span class="value-display" id="massValue">10</span>
-                    </div>
-                    <div class="slider-control">
-                        <label for="velocitySlider">Initial Velocity:</label>
-                        <input type="range" id="velocitySlider" min="0" max="20" value="5">
-                        <span class="value-display" id="velocityValue">5</span>
+                <div class="control-group">
+                    <h3>Physics Settings</h3>
+                    <div class="slider-group">
+                        <div class="slider-control">
+                            <label for="massSlider">Mass:</label>
+                            <input type="range" id="massSlider" min="1" max="100" value="10">
+                            <span class="value-display" id="massValue">10</span>
+                        </div>
+                        <div class="slider-control">
+                            <label for="velocitySlider">Initial Velocity:</label>
+                            <input type="range" id="velocitySlider" min="0" max="20" value="5">
+                            <span class="value-display" id="velocityValue">5</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="control-group">
-                <h3>Visualization</h3>
-                <div class="checkbox-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="showTrails" checked>
-                        Show Trails
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="showVectors">
-                        Show Vectors
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="showGrid">
-                        Show Grid
-                    </label>
+                <div class="control-group">
+                    <h3>Visualization</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="showTrails" checked>
+                            Show Trails
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="showVectors">
+                            Show Vectors
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="showGrid">
+                            Show Grid
+                        </label>
+                    </div>
                 </div>
-            </div>
 
-            <div class="info-panel">
-                <h3>Instructions</h3>
-                <p>Click and drag on canvas to spawn particles with velocity</p>
-                <p>Space: Pause/Resume</p>
-                <p>R: Reset</p>
-                <p>T: Toggle Trails</p>
+                
             </div>
         </div>
     </div>
