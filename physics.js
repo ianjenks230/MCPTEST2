@@ -7,16 +7,20 @@ class PhysicsSimulation {
         this.showTrails = true;
         this.showVectors = false;
         this.showGrid = false;
-        this.G = 6.67430e-11; // Universal gravitational constant
-        this.timeScale = 1;
+        this.gravity = 0.5;
+        this.bounce = 0.7;
         this.trails = new Map();
         
         this.resizeCanvas();
         window.addEventListener('resize', () => this.resizeCanvas());
         this.setupEventListeners();
         
+        // Default particle properties
+        this.defaultMass = 10;
+        this.defaultVelocity = 5;
+        
         // Start animation loop
-        this.animate();
+        requestAnimationFrame(() => this.animate());
     }
 
     resizeCanvas() {
@@ -31,8 +35,10 @@ class PhysicsSimulation {
         let startPos = { x: 0, y: 0 };
 
         this.canvas.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startPos = this.getMousePos(e);
+            if (e.button === 0) { // Left click only
+                isDragging = true;
+                startPos = this.getMousePos(e);
+            }
         });
 
         this.canvas.addEventListener('mousemove', (e) => {
@@ -45,7 +51,13 @@ class PhysicsSimulation {
             if (!isDragging) return;
             isDragging = false;
             const endPos = this.getMousePos(e);
-            this.spawnBody(startPos, endPos);
+            this.spawnParticle(startPos, endPos);
+        });
+
+        // Stop dragging if mouse leaves canvas
+        this.canvas.addEventListener('mouseleave', () => {
+            isDragging = false;
+            this.draw(); // Clear any drag line
         });
     }
 
@@ -58,7 +70,7 @@ class PhysicsSimulation {
     }
 
     drawDragLine(start, end) {
-        // Clear canvas and redraw all bodies
+        // Clear canvas and redraw all particles
         this.draw();
         
         // Draw drag line
@@ -75,8 +87,8 @@ class PhysicsSimulation {
 
     drawTrajectoryPreview(start, end) {
         const velocity = {
-            x: (end.x - start.x) * 0.1,
-            y: (end.y - start.y) * 0.1
+            x: (end.x - start.x) * 0.1 * this.defaultVelocity / 5,
+            y: (end.y - start.y) * 0.1 * this.defaultVelocity / 5
         };
 
         let pos = { x: start.x, y: start.y };
@@ -86,7 +98,7 @@ class PhysicsSimulation {
         this.ctx.moveTo(pos.x, pos.y);
         
         for (let i = 0; i < 20; i++) {
-            // Simple physics prediction
+            vel.y += this.gravity;
             pos.x += vel.x;
             pos.y += vel.y;
             
@@ -97,7 +109,165 @@ class PhysicsSimulation {
         this.ctx.stroke();
     }
 
-    spawnBody(start, end) {
+    spawnParticle(start, end = null) {
+        const velocity = end ? {
+            x: (end.x - start.x) * 0.1 * this.defaultVelocity / 5,
+            y: (end.y - start.y) * 0.1 * this.defaultVelocity / 5
+        } : {
+            x: (Math.random() - 0.5) * this.defaultVelocity,
+            y: (Math.random() - 0.5) * this.defaultVelocity
+        };
+
+        const particle = {
+            x: start.x,
+            y: start.y,
+            vx: velocity.x,
+            vy: velocity.y,
+            mass: this.defaultMass,
+            radius: Math.sqrt(this.defaultMass) * 2,
+            color: `hsl(${Math.random() * 360}, 70%, 60%)`
+        };
+
+        this.bodies.push(particle);
+        this.trails.set(particle, []);
+    }
+
+    updatePhysics() {
+        if (this.paused) return;
+
+        this.bodies.forEach(body => {
+            // Apply gravity
+            body.vy += this.gravity;
+
+            // Update position
+            body.x += body.vx;
+            body.y += body.vy;
+
+            // Store trail
+            if (this.showTrails) {
+                const trail = this.trails.get(body);
+                trail.push({ x: body.x, y: body.y });
+                if (trail.length > 50) {
+                    trail.shift();
+                }
+            }
+
+            // Bounce off walls
+            if (body.x < body.radius) {
+                body.x = body.radius;
+                body.vx *= -this.bounce;
+            } else if (body.x > this.canvas.width - body.radius) {
+                body.x = this.canvas.width - body.radius;
+                body.vx *= -this.bounce;
+            }
+
+            if (body.y < body.radius) {
+                body.y = body.radius;
+                body.vy *= -this.bounce;
+            } else if (body.y > this.canvas.height - body.radius) {
+                body.y = this.canvas.height - body.radius;
+                body.vy *= -this.bounce;
+            }
+        });
+    }
+
+    draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        if (this.showGrid) {
+            this.drawGrid();
+        }
+
+        // Draw trails
+        if (this.showTrails) {
+            this.bodies.forEach(body => {
+                const trail = this.trails.get(body);
+                if (trail.length > 1) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(trail[0].x, trail[0].y);
+                    for (let i = 1; i < trail.length; i++) {
+                        this.ctx.lineTo(trail[i].x, trail[i].y);
+                    }
+                    this.ctx.strokeStyle = body.color + '40'; // 25% opacity
+                    this.ctx.lineWidth = 2;
+                    this.ctx.stroke();
+                }
+            });
+        }
+
+        // Draw particles
+        this.bodies.forEach(body => {
+            this.ctx.beginPath();
+            this.ctx.arc(body.x, body.y, body.radius, 0, Math.PI * 2);
+            this.ctx.fillStyle = body.color;
+            this.ctx.fill();
+
+            // Draw velocity vectors
+            if (this.showVectors) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(body.x, body.y);
+                this.ctx.lineTo(
+                    body.x + body.vx * 5,
+                    body.y + body.vy * 5
+                );
+                this.ctx.strokeStyle = '#ffffff80';
+                this.ctx.lineWidth = 2;
+                this.ctx.stroke();
+            }
+        });
+    }
+
+    drawGrid() {
+        const gridSize = 50;
+        this.ctx.strokeStyle = '#ffffff10';
+        this.ctx.lineWidth = 1;
+
+        for (let x = 0; x < this.canvas.width; x += gridSize) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, 0);
+            this.ctx.lineTo(x, this.canvas.height);
+            this.ctx.stroke();
+        }
+
+        for (let y = 0; y < this.canvas.height; y += gridSize) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, y);
+            this.ctx.lineTo(this.canvas.width, y);
+            this.ctx.stroke();
+        }
+    }
+
+    animate() {
+        this.updatePhysics();
+        this.draw();
+        requestAnimationFrame(() => this.animate());
+    }
+
+    reset() {
+        this.bodies = [];
+        this.trails.clear();
+    }
+
+    togglePause() {
+        this.paused = !this.paused;
+    }
+
+    setMass(mass) {
+        this.defaultMass = mass;
+    }
+
+    setVelocity(velocity) {
+        this.defaultVelocity = velocity;
+    }
+
+    setGravity(gravity) {
+        this.gravity = gravity;
+    }
+
+    setBounce(bounce) {
+        this.bounce = bounce;
+    }
+}
         const mass = parseFloat(document.getElementById('massSlider').value) * 1e24;
         const velocity = {
             x: (end.x - start.x) * 0.1,
