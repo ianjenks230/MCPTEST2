@@ -1,6 +1,61 @@
 // Initialize simulation
 const simulation = new PhysicsSimulation('simulationCanvas');
 
+// Add event listeners for new physics settings
+const gravitySlider = document.getElementById('gravitySlider');
+const gravityValue = document.getElementById('gravityValue');
+if (gravitySlider && gravityValue) {
+    gravitySlider.addEventListener('input', () => {
+        const value = parseFloat(gravitySlider.value);
+        gravityValue.textContent = value;
+        simulation.gravity = value;
+    });
+}
+
+const airResistanceSlider = document.getElementById('airResistanceSlider');
+const airResistanceValue = document.getElementById('airResistanceValue');
+if (airResistanceSlider && airResistanceValue) {
+    airResistanceSlider.addEventListener('input', () => {
+        const value = parseFloat(airResistanceSlider.value);
+        airResistanceValue.textContent = value;
+        simulation.airResistance = value;
+    });
+}
+
+const restitutionSlider = document.getElementById('restitutionSlider');
+const restitutionValue = document.getElementById('restitutionValue');
+if (restitutionSlider && restitutionValue) {
+    restitutionSlider.addEventListener('input', () => {
+        const value = parseFloat(restitutionSlider.value);
+        restitutionValue.textContent = value;
+        simulation.restitution = value;
+    });
+}
+
+const angularDampingSlider = document.getElementById('angularDampingSlider');
+const angularDampingValue = document.getElementById('angularDampingValue');
+if (angularDampingSlider && angularDampingValue) {
+    angularDampingSlider.addEventListener('input', () => {
+        const value = parseFloat(angularDampingSlider.value);
+        angularDampingValue.textContent = value;
+        simulation.angularDamping = value;
+    });
+}
+
+const enableSpinCheckbox = document.getElementById('enableSpin');
+if (enableSpinCheckbox) {
+    enableSpinCheckbox.addEventListener('change', () => {
+        simulation.enableSpin = enableSpinCheckbox.checked;
+    });
+}
+
+const enableCollisionCheckbox = document.getElementById('enableCollision');
+if (enableCollisionCheckbox) {
+    enableCollisionCheckbox.addEventListener('change', () => {
+        simulation.enableCollision = enableCollisionCheckbox.checked;
+    });
+}
+
 // Panel collapse state
 let isControlsCollapsed = false;
 

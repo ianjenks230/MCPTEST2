@@ -13,8 +13,13 @@ class PhysicsSimulation {
         this.showTrails = true;
         this.showVectors = false;
         this.showGrid = false;
-        this.gravity = 0.5;
-        this.bounce = 0.7;
+        this.gravity = 9.81;
+        this.bounce = 0.8;
+        this.airResistance = 0.02;
+        this.restitution = 0.8;
+        this.angularDamping = 0.1;
+        this.enableSpin = true;
+        this.enableCollision = true;
         this.trails = new Map();
         
         // Default particle properties
@@ -43,6 +48,7 @@ class PhysicsSimulation {
         let isDragging = false;
         let startPos = { x: 0, y: 0 };
 
+        // Mouse events
         this.canvas.addEventListener('mousedown', (e) => {
             if (e.button === 0) { // Left click only
                 isDragging = true;
@@ -68,6 +74,34 @@ class PhysicsSimulation {
             isDragging = false;
             this.draw(); // Clear any drag line
         });
+
+        // Touch events
+        this.canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            isDragging = true;
+            startPos = this.getTouchPos(e);
+        });
+
+        this.canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (!isDragging) return;
+            const currentPos = this.getTouchPos(e);
+            this.drawDragLine(startPos, currentPos);
+        });
+
+        this.canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            if (!isDragging) return;
+            isDragging = false;
+            const endPos = this.getTouchPos(e);
+            this.spawnParticle(startPos, endPos);
+        });
+
+        // Stop dragging if touch leaves canvas
+        this.canvas.addEventListener('touchcancel', () => {
+            isDragging = false;
+            this.draw(); // Clear any drag line
+        });
     }
 
     getMousePos(e) {
@@ -75,6 +109,15 @@ class PhysicsSimulation {
         return {
             x: e.clientX - rect.left,
             y: e.clientY - rect.top
+        };
+    }
+
+    getTouchPos(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        return {
+            x: touch.clientX - rect.left,
+            y: touch.clientY - rect.top
         };
     }
 

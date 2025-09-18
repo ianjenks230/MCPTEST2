@@ -42,6 +42,37 @@ body {
     z-index: 2;
 }
 
+@media (max-width: 768px) {
+    .ui-container {
+        width: calc(100% - 20px);
+        max-width: 360px;
+        margin: 0 10px;
+        right: auto;
+    }
+    
+    .controls-content {
+        max-height: calc(80vh - 80px);
+    }
+
+    .slider-control input[type="range"] {
+        height: 24px;  /* Larger hit area for mobile */
+    }
+
+    .slider-control input[type="range"]::-webkit-slider-thumb {
+        width: 24px;  /* Larger thumb for mobile */
+        height: 24px;
+    }
+
+    .checkbox-label {
+        min-height: 44px; /* Minimum touch target size */
+    }
+
+    .btn {
+        min-height: 44px; /* Minimum touch target size */
+        padding: 12px 24px;
+    }
+}
+
 .toggle-btn {
     position: absolute;
     top: 0;
