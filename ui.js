@@ -101,8 +101,3 @@ window.addEventListener('keydown', (e) => {
             break;
     }
 });
-            gridCheckbox.checked = !gridCheckbox.checked;
-            simulation.showGrid = gridCheckbox.checked;
-            break;
-    }
-});
